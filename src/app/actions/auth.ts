@@ -30,8 +30,15 @@ export async function SignUp(state: FormState, formData: FormData) {
 
     try {
         const [result] = await pool.execute(
-            'INSERT INTO users values(?,?,?,?,?)',
-            [userId, user.firstName, user.lastName, user.email, hashedPassword],
+            'INSERT INTO users values(?,?,?,?,?,?)',
+            [
+                userId,
+                user.firstName,
+                user.lastName,
+                user.email,
+                hashedPassword,
+                'custom',
+            ],
         );
         if (result) {
             success = true;
