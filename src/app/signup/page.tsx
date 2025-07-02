@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
-    User,    
+    User,
     Mail,
     Lock,
     Eye,
@@ -16,9 +16,11 @@ import {
     UserPlus, // For the main signup icon
     Zap, // For branding
 } from "lucide-react";
-import Link from "next/link"; 
+import Link from "next/link";
 import { SignUp } from "../actions/auth";
-import {toast} from 'sonner'
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function SignUpPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +31,7 @@ export default function SignUpPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,9 +52,9 @@ export default function SignUpPage() {
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Signing up with Google...");
         // Integrate Google OAuth signup here
+        signIn("google");
+
         setIsLoading(false);
     };
 
@@ -63,10 +66,12 @@ export default function SignUpPage() {
         setIsLoading(false);
     };
     const [state, action, pending] = useActionState(SignUp, undefined);
-    console.log(state)
-    if(state?.success){
-	    toast("account created successfully! login to your account to access your account")
-
+    console.log(state);
+    if (state?.success) {
+        toast.success("Account created successfully", {
+            description: "Login to access your account",
+        });
+        router.push("/login");
     }
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
@@ -143,12 +148,11 @@ export default function SignUpPage() {
                                 className="h-12 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                             />
                         </div>
-{state?.errors?.lastName && (
+                        {state?.errors?.lastName && (
                             <p className="text-red-500 ">
                                 {state.errors.lastName}
                             </p>
                         )}
-
 
                         <div>
                             <Label
@@ -166,9 +170,9 @@ export default function SignUpPage() {
                                 className="h-12 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
                             />
                         </div>
-			{state?.errors?.email && (
-				<p className="text-red-500">{state.errors.email}</p>
-			)}
+                        {state?.errors?.email && (
+                            <p className="text-red-500">{state.errors.email}</p>
+                        )}
 
                         <div>
                             <Label
@@ -207,10 +211,11 @@ export default function SignUpPage() {
                                     </span>
                                 </Button>
                             </div>
-{state?.errors?.password && (
-				<p className="text-red-500">{state.errors.password}</p>
-			)}
-
+                            {state?.errors?.password && (
+                                <p className="text-red-500">
+                                    {state.errors.password}
+                                </p>
+                            )}
                         </div>
 
                         {/* Sign Up Button */}
