@@ -15,4 +15,5 @@ pool.on('connection', () => {
     console.log('✅ MySQL pool connection established');
 });
 
+
 export { pool };
