@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { signIn } from "next-auth/react";
 export default function LoginPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -32,35 +33,44 @@ export default function LoginPage() {
         // Simulate an API call
         //
 
-        const result = await fetch("http://localhost:3000/api/login", {
-            method: "POST",
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        });
-
-        console.log(result.status);
-        if (result.status === 403) {
-            return toast.error("Login failed", {
-                description: "Invalid email or password",
-                position: "top-right",
-                action: {
-                    label: "ok",
-                    onClick: () => console.log("Undo"),
-                },
+        try {
+            const result = await fetch("http://localhost:3000/api/login", {
+                method: "POST",
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
             });
-        }
-        if (result.status == 404) {
-            return toast("No Account Found", {
-                description:
-                    "There is no account with the specified email address",
+
+            console.log(result.status);
+            if (result.status === 403) {
+                return toast.error("Login failed", {
+                    description: "Invalid email or password",
+                    position: "top-right",
+                    action: {
+                        label: "ok",
+                        onClick: () => console.log("Undo"),
+                    },
+                });
+            }
+            if (result.status == 404) {
+                return toast("No Account Found", {
+                    description:
+                        "There is no account with the specified email address",
+                    position: "top-right",
+
+                    closeButton: true,
+                });
+            }
+            router.replace("/feed");
+        } catch (err) {
+            return toast(err?.msg || "something went wrong ", {
+                description: "pls try again",
                 closeButton: true,
             });
+        } finally {
+            setIsLoading(false);
         }
-        router.replace("/feed");
-
-        setIsLoading(false);
     };
 
     const handleGoogleLogin = async () => {
@@ -68,6 +78,7 @@ export default function LoginPage() {
         await new Promise((resolve) => setTimeout(resolve, 1500));
         console.log("Logging in with Google...");
         // Integrate Google OAuth login here
+        signIn("google");
         setIsLoading(false);
     };
 
@@ -221,7 +232,12 @@ export default function LoginPage() {
                             disabled={isLoading}
                         >
                             {/* Reusing Square for Google, with a subtle Google-like fill/stroke */}
-                            <Square className="w-5 h-5 text-blue-600 fill-blue-500 stroke-blue-600" />
+                            <Image
+                                src={"/google.png"}
+                                alt="google login icon"
+                                width={20}
+                                height={20}
+                            />
                             Google
                         </Button>
                         <Button
