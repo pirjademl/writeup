@@ -57,7 +57,7 @@ export const AuthOption: AuthOptions = {
 
                 const id = user.id;
                 const [existingUsers] = await pool.execute<User[]>(
-                    'select firstName,lastName,email from users where email=?',
+                    'select userId, firstName,lastName,email from users where email=?',
                     [email],
                 );
                 if (existingUsers.length === 0) {
@@ -73,8 +73,12 @@ export const AuthOption: AuthOptions = {
                             account?.provider,
                         ],
                     );
+                    user.id = userId;
                     return true;
                 } else {
+                    console.log(existingUsers);
+
+                    user.id = existingUsers[0].userId;
                     console.log('user already exists');
                 }
                 return true;
