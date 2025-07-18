@@ -18,7 +18,8 @@ export const AuthOption: AuthOptions = {
                 email: { label: 'Email', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
-            async authorize(credentials, req) {
+            //disable unused vars
+            async authorize(credentials, _) {
                 if (!credentials?.email || !credentials?.password) {
                     return null;
                 }
@@ -57,7 +58,7 @@ export const AuthOption: AuthOptions = {
 
                 const id = user.id;
                 const [existingUsers] = await pool.execute<User[]>(
-                    'select firstName,lastName,email from users where email=?',
+                    'select userId, firstName,lastName,email from users where email=?',
                     [email],
                 );
                 if (existingUsers.length === 0) {
@@ -73,8 +74,12 @@ export const AuthOption: AuthOptions = {
                             account?.provider,
                         ],
                     );
+                    user.id = userId;
                     return true;
                 } else {
+                    console.log(existingUsers);
+
+                    user.id = existingUsers[0].userId;
                     console.log('user already exists');
                 }
                 return true;
@@ -97,7 +102,7 @@ export const AuthOption: AuthOptions = {
             }
             return session;
         },
-        redirect({ url, baseUrl }) {
+        redirect(_) {
             return '/feed';
         },
     },

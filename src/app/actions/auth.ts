@@ -20,10 +20,10 @@ export async function SignUp(state: FormState, formData: FormData) {
 
     const user = validatedFields.data;
 
-    const existinguser = await pool.query(
-        'SELECT * FROM users WHERE email =?',
-        [user.email],
-    );
+    //const existinguser = await pool.query(
+    //   'SELECT * FROM users WHERE email =?',
+    //  [user.email],
+    //);
     const userId = uuidv4();
     let success = false;
     const hashedPassword = await bcrypt.hash(user.password, 10);
