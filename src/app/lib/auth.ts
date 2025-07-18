@@ -18,7 +18,8 @@ export const AuthOption: AuthOptions = {
                 email: { label: 'Email', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
-            async authorize(credentials, req) {
+            //disable unused vars
+            async authorize(credentials, _) {
                 if (!credentials?.email || !credentials?.password) {
                     return null;
                 }
@@ -101,7 +102,7 @@ export const AuthOption: AuthOptions = {
             }
             return session;
         },
-        redirect({ url, baseUrl }) {
+        redirect(_) {
             return '/feed';
         },
     },

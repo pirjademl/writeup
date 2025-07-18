@@ -223,7 +223,7 @@ export default function LandingPage() {
                             online presence with ease.
                         </p>
                         <Button
-                            size="xl" // Custom size (see next section for how to add)
+                            size="lg" // Custom size (see next section for how to add)
                             className="h-14 px-8 py-4 text-lg font-semibold rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                         >
                             Get Started for Free

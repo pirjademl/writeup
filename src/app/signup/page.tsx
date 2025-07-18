@@ -65,8 +65,11 @@ export default function SignUpPage() {
         // Integrate GitHub OAuth signup here
         setIsLoading(false);
     };
+    // @ts-ignore
     const [state, action, pending] = useActionState(SignUp, undefined);
     console.log(state);
+
+    // @ts-ignore
     if (state?.success) {
         toast.success("Account created successfully", {
             description: "Login to access your account",

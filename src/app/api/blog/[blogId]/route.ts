@@ -1,15 +1,21 @@
 import { getuserSession } from '@/app/lib/useSession';
 import { pool } from '@/persistence/mysql';
+import { ParamsSerializerOptions } from 'axios';
+import { Params } from 'next/dist/server/request/params';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req, { params }) {
-    const { blogId } = await params;
+type tParams = Promise<{
+    blogId: string;
+}>;
+export async function GET(req: NextRequest, context: { params: tParams }) {
+    const { blogId } = await context.params;
 
-    const [result] = await pool.query(
-        'select  title, content from blogs where blogId=?',
+    const [rows] = await pool.query(
+        'SELECT title, content FROM blogs WHERE blogId = ?',
         [blogId],
     );
-    console.log('result', result);
 
-    return NextResponse.json(result[0], { status: 200 });
+    const result = Array.isArray(rows) ? rows[0] : null;
+
+    return NextResponse.json(result, { status: 200 });
 }
