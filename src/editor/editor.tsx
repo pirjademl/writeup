@@ -1,19 +1,11 @@
 // editor/editor.jsx
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Blockquote from "@tiptap/extension-blockquote";
-import Underline from "@tiptap/extension-underline";
-import Bold from "@tiptap/extension-bold";
-import Italic from "@tiptap/extension-italic";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { Placeholder } from "@tiptap/extensions";
-import { common as lowlightCommon, createLowlight, all } from "lowlight";
-import javascript from "highlight.js/lib/languages/javascript";
-import typescript from "highlight.js/lib/languages/typescript";
-import css from "highlight.js/lib/languages/css";
-import html from "highlight.js/lib/languages/xml";
+import { createLowlight, all } from "lowlight";
 import { LineHeight } from "@tiptap/extension-text-style";
 import {
     BoldIcon,
@@ -28,11 +20,8 @@ import {
     Code2Icon,
     MinusIcon,
     PilcrowIcon,
-    ArrowDownNarrowWideIcon,
-    CircleChevronDown,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
     Select,
@@ -41,29 +30,22 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import { Toggle } from "@/components/ui/toggle";
-import { cn } from "@/lib/utils"; // <-- This is crucial for joining classes safely
-import { useEffect, useCallback, useState } from "react";
-import { HeadingEditor } from "./blog-heading.editor";
-import {
-    DropdownMenu,
-    DropdownMenuArrow,
-    DropdownMenuContent,
-    DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
-import {
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 const lowlight = createLowlight(all);
 
-const MenuBar = ({ editor }) => {
+interface MenuBarProps {
+    editor: Editor;
+}
+
+const MenuBar = ({ editor }: MenuBarProps) => {
     if (!editor) {
         alert("edutoir is null return ");
         return null;
     }
-    const [currentLineHeight, setCurrentLineHeight] = useState<string>("1.0");
-    const handleLineHeight = (e) => {
+    //const [currentLineHeight, setCurrentLineHeight] = useState<string>("1.0");
+    const handleLineHeight = () => {
         alert("Hello world");
     };
 
@@ -199,22 +181,20 @@ const MenuBar = ({ editor }) => {
             >
                 <MinusIcon className="h-4 w-4" />
             </Toggle>
-
-            <div>
-                <Select onValueChange={handleLineHeight} className="w-[300px]">
-                    <SelectTrigger>{1.0}</SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="2">{2.0}</SelectItem>
-                        <SelectItem value="3.0">{3.0}</SelectItem>
-                        <SelectItem value="4.0">{4.0}</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
         </div>
     );
 };
 
-export const BLogEditor = ({ initialContent = "" }) => {
+interface BlogEditorProps {
+    initialContent: string;
+    onContentChange: (content: string) => void;
+}
+
+export const BLogEditor = ({
+    initialContent = "",
+    onContentChange,
+}: BlogEditorProps) => {
+    console.log("intialContent to editor", initialContent);
     const editor = useEditor({
         immediatelyRender: false,
         extensions: [
@@ -231,39 +211,40 @@ export const BLogEditor = ({ initialContent = "" }) => {
         ],
         editorProps: {
             attributes: {
-                // Use cn utility to safely join Tailwind classes
                 class: cn(
                     "prose dark:prose-invert",
                     "max-w-none w-full",
                     "focus:outline-none",
                     "min-h-[500px] md:min-h-[700px] lg:min-h-[800px]",
                     "py-8 text-xl",
+                    "leading-loose  ",
                 ),
             },
         },
-        content: initialContent || localStorage.getItem("editorContent") || "",
+        content: initialContent || "",
         onUpdate: ({ editor }) => {
-            const html = editor.getHTML();
-            localStorage.setItem("editorContent", html);
+            const content = editor.getText();
+            onContentChange(content);
         },
-        onCreate: ({ editor }) => {
-            // No specific action here, content is loaded by `content` prop/localStorage
-        },
+        //onCreate: ({ editor }) => {},
     });
 
     useEffect(() => {
+        if (!editor?.isEmpty) return;
+        if (editor && initialContent) {
+            editor.commands.setContent(initialContent);
+        }
         return () => {
             if (editor) {
                 editor.destroy();
             }
         };
-    }, [editor]);
+    }, [editor, initialContent]);
 
     return (
         <div className="w-full">
+            {" "}
             {editor && <MenuBar editor={editor} />}
-            <HeadingEditor />
-
             <EditorContent editor={editor} className="mt-0" />
         </div>
     );
