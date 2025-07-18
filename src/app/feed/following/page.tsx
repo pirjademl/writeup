@@ -1,6 +1,4 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Link from "next/link";
-import Image from "next/image";
 import axios from "axios";
 
 interface Blog {
@@ -9,16 +7,14 @@ interface Blog {
 }
 
 export default async function FollowingFeedPage() {
-    const { data }: Blog[] = await axios.get(
-        "http://localhost:3000/api/blogs/",
-    );
+    const { data } = await axios.get("http://localhost:3000/api/blogs/");
     return (
         <div>
             <h2>Following Blogs</h2>
             {/* Display blogs from followed users here */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-12">
                 {data.map((blog) => (
-                    <Card className="rounded-xs flex flex-col">
+                    <Card className="rounded-xs flex flex-col " key={blog.id}>
                         <CardHeader>
                             <div className="max-w-[500px] p-0 m-0">
                                 <img

@@ -71,7 +71,10 @@ export default function CreateBlogPage() {
     return (
         <div className="min-h-[calc(100vh-6rem)] py-8 px-4 flex flex-col items-center">
             <div className="w-full max-w-4xl space-y-8">
-                <HeadingEditor onHeadingContentChange={handleTitleChange} />
+                <HeadingEditor
+                    intialHeaading=""
+                    onHeadingContentChange={handleTitleChange}
+                />
 
                 <BLogEditor
                     initialContent={content}

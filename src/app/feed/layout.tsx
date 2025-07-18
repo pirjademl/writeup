@@ -1,17 +1,6 @@
 import { ReactNode } from "react";
 import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BellIcon, CircleAlert, SquarePenIcon, UserIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenuSub,
-    DropdownMenuSeparator,
-    DropdownMenuItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-    DropdownMenu,
-} from "@/components/ui/dropdown-menu";
-
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getServerSession } from "next-auth";
 import { AuthOption } from "../lib/auth";
 import { FeedHeading } from "@/common/feed.heading";

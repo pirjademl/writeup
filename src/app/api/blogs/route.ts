@@ -8,7 +8,20 @@ export async function POST(req: NextRequest) {
     const { title, content, status } = await req.json();
     console.log(title, content, status);
 
-    const session = await getServerSession(AuthOption);
+    const session = (await getServerSession(AuthOption)) as {
+        user: {
+            id: string;
+            name?: string;
+            email?: string;
+        };
+    };
+    if (!session || !session.user || !session.user.id) {
+        return NextResponse.json(
+            { message: "can't create blog post" },
+            { status: 401 },
+        );
+    }
+
     const authorId = session.user.id;
     try {
         const blogId = uuidv4();
@@ -25,46 +38,46 @@ export async function POST(req: NextRequest) {
 }
 
 // Update blog post by ID
-export async function PATCH(
-    req: NextRequest,
-    { params }: { params: { blogId: string } },
-) {
-    const { title, content } = await req.json();
-    const blogId = params.blogId;
+//export async function PATCH(
+//   req: NextRequest,
+//  { params }: { params: { blogId: string } },
+//) {
+//   const { title, content } = await req.json();
+//  const blogId = params.blogId;
+//
+//   // Optional: validate title/content
+//  if (!title && !content) {
+//     return NextResponse.json(
+//        { message: 'Nothing to update' },
+//       { status: 400 },
+//  );
+//    }
 
-    // Optional: validate title/content
-    if (!title && !content) {
-        return NextResponse.json(
-            { message: 'Nothing to update' },
-            { status: 400 },
-        );
-    }
+//   const session = await getServerSession(AuthOption);
+//  if (!session || !session.user) {
+//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+//. }
 
-    const session = await getServerSession(AuthOption);
-    if (!session || !session.user) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+//const authorId = session.user.id;
 
-    const authorId = session.user.id;
+//try {
+//   const [result] = await pool.execute(
+//      `UPDATE blogs SET title = ?, content = ? WHERE blogId = ? AND userId = ?`,
+//     [title, content, blogId, authorId],
+//       );
 
-    try {
-        const [result] = await pool.execute(
-            `UPDATE blogs SET title = ?, content = ? WHERE blogId = ? AND userId = ?`,
-            [title, content, blogId, authorId],
-        );
-
-        return NextResponse.json(
-            { message: 'Blog updated successfully' },
-            { status: 200 },
-        );
-    } catch (err) {
-        console.error('Update error:', err);
-        return NextResponse.json(
-            { message: 'Failed to update blog' },
-            { status: 500 },
-        );
-    }
-}
+//return NextResponse.json(
+//   { message: 'Blog updated successfully' },
+//  { status: 200 },
+//);
+//} catch (err) {
+//   console.error('Update error:', err);
+//  return NextResponse.json(
+//     { message: 'Failed to updatblog' },
+//    { status: 500 },
+// );
+//    }
+//}
 export async function GET(req: NextRequest) {
     try {
         const [result] = await pool.query(
