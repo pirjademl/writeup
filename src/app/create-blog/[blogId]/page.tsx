@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { HeadingEditor } from "@/editor/blog-heading.editor";
 import { BLogEditor } from "@/editor/editor";
@@ -20,11 +20,14 @@ export default function CreateBlogPage() {
         setContent(content!);
     }, []);
 
-    const handleheadingContentChange = useCallback((heading: string) => {
-        router.replace(`/p/${123123123}`);
-        console.log("heandle  heading content", heading);
-        setHeadingContent(heading!);
-    }, []);
+    const handleheadingContentChange = useCallback(
+        (heading: string) => {
+            router.replace(`/p/${123123123}`);
+            console.log("heandle  heading content", heading);
+            setHeadingContent(heading!);
+        },
+        [router],
+    );
 
     return (
         <div className="min-h-[calc(100vh-6rem)] py-8 px-4 flex flex-col items-center">

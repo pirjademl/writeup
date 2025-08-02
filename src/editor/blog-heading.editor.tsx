@@ -32,7 +32,15 @@ import StarterKit from "@tiptap/starter-kit";
 import React from "react";
 import { useEffect } from "react";
 
-export const HeadingEditor = ({ intialHeaading, onHeadingContentChange }) => {
+interface IHeadingEditor {
+    intialHeaading: string;
+    onHeadingContentChange: (arg0: string) => void;
+}
+
+export const HeadingEditor = ({
+    intialHeaading,
+    onHeadingContentChange,
+}: IHeadingEditor) => {
     console.log("titleintial content", intialHeaading);
     const editor = useEditor({
         immediatelyRender: false,

@@ -23,12 +23,6 @@ import {
 } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
-import {
-    Select,
-    SelectTrigger,
-    SelectContent,
-    SelectItem,
-} from "@/components/ui/select";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
@@ -41,13 +35,8 @@ interface MenuBarProps {
 
 const MenuBar = ({ editor }: MenuBarProps) => {
     if (!editor) {
-        alert("edutoir is null return ");
         return null;
     }
-    //const [currentLineHeight, setCurrentLineHeight] = useState<string>("1.0");
-    const handleLineHeight = () => {
-        alert("Hello world");
-    };
 
     return (
         <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-md border bg-card text-card-foreground shadow-sm mb-4 sticky top-[3.75rem] z-40">

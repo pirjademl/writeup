@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { createPool, Pool } from 'mysql2/promise';
+import { Pool } from 'mysql2/promise';
 
 const pool: Pool = mysql.createPool({
     host: process.env.MYSQL_PROTOCOL,
@@ -14,6 +14,5 @@ const pool: Pool = mysql.createPool({
 pool.on('connection', () => {
     console.log('✅ MySQL pool connection established');
 });
-
 
 export { pool };

@@ -11,65 +11,36 @@ import {
     Eye,
     EyeOff,
     LoaderCircle,
-    Square, // For Google, maintaining lucide-react only
+    Square,
     Github,
-    UserPlus, // For the main signup icon
-    Zap, // For branding
+    UserPlus,
+    Zap,
+    User2,
 } from "lucide-react";
 import Link from "next/link";
 import { SignUp } from "../actions/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { FormState } from "@/lib/definations";
 
 export default function SignUpPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+
     const router = useRouter();
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setPasswordError(""); // Reset error message
-
-        if (password !== confirmPassword) {
-            setPasswordError("Passwords do not match.");
-            return;
-        }
-        setIsLoading(true);
-        // Simulate an API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        console.log("Signup attempt with:", { name, email, password });
-        // In a real app, integrate with your authentication service here (e.g., NextAuth.js)
-        // If successful, redirect user to login or dashboard
-        setIsLoading(false);
-    };
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
-        // Integrate Google OAuth signup here
         signIn("google");
-
         setIsLoading(false);
     };
 
-    const handleGithubLogin = async () => {
-        setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Signing up with GitHub...");
-        // Integrate GitHub OAuth signup here
-        setIsLoading(false);
-    };
-    // @ts-ignore
-    const [state, action, pending] = useActionState(SignUp, undefined);
-    console.log(state);
+    const initialState: FormState = { errors: {} };
 
-    // @ts-ignore
+    const handleGithubLogin = async () => {};
+    const [state, action] = useActionState(SignUp, initialState);
+
     if (state?.success) {
         toast.success("Account created successfully", {
             description: "Login to access your account",
@@ -176,6 +147,27 @@ export default function SignUpPage() {
                         {state?.errors?.email && (
                             <p className="text-red-500">{state.errors.email}</p>
                         )}
+                        <div>
+                            <Label
+                                htmlFor="userName"
+                                className="text-gray-700 dark:text-gray-300 mb-2 block"
+                            >
+                                <User2 className="inline-block w-4 h-4 mr-2 align-text-bottom" />
+                                userName
+                            </Label>
+                            <Input
+                                id="userName"
+                                name="userName"
+                                type="text"
+                                placeholder="john.doe"
+                                className="h-12 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400"
+                            />
+                        </div>
+                        {state?.errors?.userName && (
+                            <p className="text-red-500">
+                                {state.errors.userName}
+                            </p>
+                        )}
 
                         <div>
                             <Label
@@ -221,7 +213,6 @@ export default function SignUpPage() {
                             )}
                         </div>
 
-                        {/* Sign Up Button */}
                         <Button
                             type="submit"
                             className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200"
@@ -236,7 +227,6 @@ export default function SignUpPage() {
                         </Button>
                     </form>
 
-                    {/* Divider */}
                     <div className="my-8 text-center text-sm text-gray-500 dark:text-gray-400 relative">
                         <div className="absolute left-0 top-1/2 w-full border-t border-gray-200 dark:border-gray-700"></div>
                         <span className="relative px-4 bg-white dark:bg-gray-900 z-10">
@@ -244,7 +234,6 @@ export default function SignUpPage() {
                         </span>
                     </div>
 
-                    {/* Social Sign Up */}
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Button
                             variant="outline"
