@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,87 +13,38 @@ import {
     LoaderCircle,
     Eye,
     EyeOff,
-    Square, // For Google, maintaining lucide-react only
-    Zap, // A fresh icon for "Writeup" branding
+    Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 export default function LoginPage() {
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsLoading(true);
-        // Simulate an API call
-        //
-
-        try {
-            const result = await fetch("http://localhost:3000/api/login", {
-                method: "POST",
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
-            });
-
-            console.log(result.status);
-            if (result.status === 403) {
-                return toast.error("Login failed", {
-                    description: "Invalid email or password",
-                    position: "top-right",
-                    action: {
-                        label: "ok",
-                        onClick: () => console.log("Undo"),
-                    },
-                });
-            }
-            if (result.status == 404) {
-                return toast("No Account Found", {
-                    description:
-                        "There is no account with the specified email address",
-                    position: "top-right",
-
-                    closeButton: true,
-                });
-            }
-            router.replace("/feed");
-        } catch (err) {
-            return toast(err?.msg || "something went wrong ", {
-                description: "pls try again",
-                closeButton: true,
-            });
-        } finally {
-            setIsLoading(false);
-        }
+        signIn("credentials", {
+            redirect: true,
+            email,
+            password,
+        });
     };
 
     const handleGoogleLogin = async () => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Logging in with Google...");
-        // Integrate Google OAuth login here
         signIn("google");
         setIsLoading(false);
     };
 
     const handleGithubLogin = async () => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Logging in with GitHub...");
-        // Integrate GitHub OAuth login here
         setIsLoading(false);
     };
 
     return (
         <div className="min-h-screen w-full  flex items-center justify-center bg-gray-100 dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
             <div className="relative flex w-full max-w-6xl overflow-hidden rounded-xl shadow-2xl bg-white dark:bg-gray-900">
-                {/* Left Section: Image (Hidden on small screens) */}
                 <div className="hidden md:flex md:w-1/2 relative items-center justify-center p-8 bg-gray-800 dark:bg-gray-800">
                     <Image
                         src="https://images.unsplash.com/photo-1510519138101-570d1dca3d66?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -117,7 +68,6 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                {/* Right Section: Login Form */}
                 <div className="w-full md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
                     <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                         Sign In
@@ -147,7 +97,6 @@ export default function LoginPage() {
                             />
                         </div>
 
-                        {/* Password Input */}
                         <div>
                             <Label
                                 htmlFor="password"
@@ -191,7 +140,6 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        {/* Forgot Password Link (Optional) */}
                         <div className="text-right">
                             <Link href="/forgot-password">
                                 <p className="text-sm text-blue-600 hover:underline dark:text-blue-400">
@@ -200,7 +148,6 @@ export default function LoginPage() {
                             </Link>
                         </div>
 
-                        {/* Login Button */}
                         <Button
                             type="submit"
                             className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition-colors duration-200"
@@ -215,7 +162,6 @@ export default function LoginPage() {
                         </Button>
                     </form>
 
-                    {/* Divider */}
                     <div className="my-8 text-center text-sm text-gray-500 dark:text-gray-400 relative">
                         <div className="absolute left-0 top-1/2 w-full border-t border-gray-200 dark:border-gray-700"></div>
                         <span className="relative px-4 bg-white dark:bg-gray-900 z-10">
@@ -223,7 +169,6 @@ export default function LoginPage() {
                         </span>
                     </div>
 
-                    {/* Social Logins */}
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Button
                             variant="outline"
@@ -231,7 +176,6 @@ export default function LoginPage() {
                             onClick={handleGoogleLogin}
                             disabled={isLoading}
                         >
-                            {/* Reusing Square for Google, with a subtle Google-like fill/stroke */}
                             <Image
                                 src={"/google.png"}
                                 alt="google login icon"
@@ -251,7 +195,6 @@ export default function LoginPage() {
                         </Button>
                     </div>
 
-                    {/* Sign Up Link */}
                     <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-8">
                         Don&apos;t have an account?{" "}
                         <Link href="/signup">

@@ -8,17 +8,19 @@ import {
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { SquarePenIcon, BellIcon, UserIcon, CircleAlert } from "lucide-react";
-import { getServerSession } from "next-auth";
-import { AuthOption } from "@/app/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const notifications = [
     { id: 1, title: "Liked your blog" },
     { id: 2, title: "Liked your blog" },
 ];
-export const FeedHeading = async () => {
-    const session = await getServerSession(AuthOption);
-    const userMail = session.user?.email;
+interface IFeedHeading {
+    name?: string;
+    image?: string;
+    email?: string;
+}
+
+export const FeedHeading = async ({ name, image, email }: IFeedHeading) => {
     return (
         <header className="w-full  shadow-sm py-4  px-4 sticky top-0 z-50 items-center  ">
             {" "}
@@ -70,10 +72,7 @@ export const FeedHeading = async () => {
                                     className="relative h-9 w-9 rounded-full"
                                 >
                                     <Avatar className="h-9 w-9">
-                                        <AvatarImage
-                                            src={session.user?.image}
-                                            alt={session.user?.name}
-                                        />
+                                        <AvatarImage src={image} alt={name} />
                                         <AvatarFallback>
                                             <UserIcon className="h-5 w-5" />
                                         </AvatarFallback>
@@ -86,11 +85,11 @@ export const FeedHeading = async () => {
                                 forceMount
                             >
                                 <DropdownMenuItem className="px-4 py-2 text-sm font-semibold">
-                                    {session.user.name}
+                                    {name}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem asChild>
-                                    <Link href={`/profile/${userMail}`}>
+                                    <Link href={`/profile/${email}`}>
                                         Profile
                                     </Link>
                                 </DropdownMenuItem>

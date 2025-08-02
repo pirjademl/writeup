@@ -1,7 +1,7 @@
 import { pool } from '@/persistence/mysql';
 import { User } from '../api/login/route';
 
-export async function getUserByEmail(username: String) {
+export async function getUserByEmail(username: string) {
     try {
         const [result] = await pool.execute<User[]>(
             'SELECT firstName,lastName,email from users where email=?',

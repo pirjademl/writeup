@@ -44,7 +44,7 @@ export function GetConfig(): EnvConfig {
             GOOGLE_CLIENT_SECRET,
         };
     } catch (err) {
-        console.error('error loading environment variables');
+        console.error('error loading environment variables', err);
         process.exit(0);
     }
 }
