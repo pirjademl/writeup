@@ -4,23 +4,26 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getServerSession } from "next-auth";
 import { AuthOption } from "../lib/auth";
 import { FeedHeading } from "@/common/feed.heading";
+import { redirect } from "next/navigation";
 
 interface FeedLayoutProps {
     children: ReactNode;
 }
 
 export default async function FeedLayout({ children }: FeedLayoutProps) {
-    const notifications = [
-        { id: 1, title: "Liked your blog" },
-        { id: 2, title: "Liked your blog" },
-    ];
-
     const session = await getServerSession(AuthOption);
-    const userMail = session.user?.email;
+    if (!session) {
+        redirect("/login");
+    }
+    // const userMail = session.user?.email;
 
     return (
         <div className=" w-full flex flex-col h-screen ">
-            <FeedHeading />
+            <FeedHeading
+                email={session.user.email as string}
+                image={session.user.image as string}
+                name={session.user.name as string}
+            />
 
             <div className="container mx-auto flex items-center justify-between">
                 <Tabs defaultValue="random">

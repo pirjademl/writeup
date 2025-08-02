@@ -1,12 +1,10 @@
 import { Montserrat } from "next/font/google";
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme.provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { SessionProvider } from "next-auth/react";
 import { AuthSessionProvider } from "@/providers/session.provider";
 import { getServerSession } from "next-auth";
 import { AuthOption } from "./lib/auth";
