@@ -29,14 +29,17 @@ export async function SignUp(
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
     try {
+        const username = user.lastName
+            .substring(0, user.lastName.length - 1)
+            .concat(user.firstName.substring(0, user.firstName.length / 2));
         const [result] = await pool.execute(
             'INSERT INTO users values(?,?,?,?,?,?,?)',
             [
                 userId,
                 user.firstName,
                 user.lastName,
-                user.userName,
                 user.email,
+                username,
                 hashedPassword,
                 'custom',
             ],
