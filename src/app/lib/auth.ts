@@ -55,6 +55,8 @@ export const AuthOption: AuthOptions = {
     },
     callbacks: {
         async signIn({ user, account }) {
+            console.log(config.GOOGLE_CLIENT_ID);
+            console.log(config.GOOGLE_CLIENT_SECRET);
             try {
                 const email = user.email;
                 if (!user.name) {
