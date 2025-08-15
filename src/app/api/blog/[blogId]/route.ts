@@ -66,3 +66,41 @@ export async function PUT(req: NextRequest, context: { params: tParams }) {
         );
     }
 }
+export async function PATCH(
+    req: NextRequest,
+    { params }: { params: Promise<{ blogId: string }> },
+): Promise<Response> {
+    console.log('updating title and content');
+    const { title, content } = await req.json();
+    const { blogId } = await params;
+
+    if (!title && !content) {
+        return NextResponse.json(
+            { message: 'Nothing to update' },
+            { status: 400 },
+        );
+    }
+    const session = await getServerSession(AuthOption);
+    if (!session || !session.user) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    const authorId = session.user.id;
+
+    try {
+        const [result] = await pool.execute(
+            `UPDATE blogs SET title = ?, content = ? WHERE blogId = ? AND userId = ?`,
+            [title, content, blogId, authorId],
+        );
+        console.log('result', result);
+        return NextResponse.json(
+            { message: 'Blog updated successfully' },
+            { status: 200 },
+        );
+    } catch (err) {
+        console.error('Update error:', err);
+        return NextResponse.json(
+            { message: 'Failed to updatblog' },
+            { status: 500 },
+        );
+    }
+}
