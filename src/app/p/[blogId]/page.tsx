@@ -10,14 +10,14 @@ import axios from "axios";
 
 export default function EditBlogPage() {
     const { blogId } = useParams();
-    console.log("client blog id ", blogId);
     const [content, setContent] = useState<string>("");
 
     const debounceSave = useDebounce(
         async (newTitle: string, newContent: string) => {
             if (!blogId) return;
+            console.log("updating content and heading", newContent, newTitle);
             try {
-                await fetch(`http://localhost:3000/api/blogs/${blogId}`, {
+                await fetch(`http://localhost:3000/api/blog/${blogId}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -38,6 +38,7 @@ export default function EditBlogPage() {
     const handleContentChange = useCallback(
         (newContent: string) => {
             setContent(newContent);
+
             debounceSave(title, newContent);
         },
         [title, debounceSave],
