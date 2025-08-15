@@ -41,6 +41,7 @@ export async function PATCH(
     req: NextRequest,
     { params }: { params: Promise<{ blogId: string }> },
 ): Promise<Response> {
+    console.log('updating title and content');
     const { title, content } = await req.json();
     const { blogId } = await params;
 
@@ -77,7 +78,7 @@ export async function PATCH(
 export async function GET() {
     try {
         const [result] = await pool.query(
-            `SELECT * FROM blogs WHERE title IS NOT NULL and title <> '' AND content IS NOT NULL AND content <> '' `,
+            `SELECT * FROM blogs WHERE title IS NOT NULL and status="published" AND title <> '' AND content IS NOT NULL AND content <> '' `,
         );
 
         return NextResponse.json(result, { status: 200 });
