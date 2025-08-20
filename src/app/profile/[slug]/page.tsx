@@ -29,7 +29,7 @@ export default async function ProfilePage(props: {
                         return (
                             <div
                                 key={blog.blogId as Key}
-                                className="p-6 flex flex-col gap-2 border border-gray-300"
+                                className="p-6 flex flex-col gap-2 border border-border"
                             >
                                 <h4 className="font-bold">{blog.title}</h4>
                                 <p className="truncate">{blog.content}</p>

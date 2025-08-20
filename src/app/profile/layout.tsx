@@ -50,8 +50,17 @@ export default async function ProfileLayout({ children }: ProfileProps) {
                     </div>
                     {children}
                 </div>
-                <div className=" hidden lg:block border border-red-500 min-w-[400px]">
-                    <div className="min-h-[100vh]">{session.user.name}</div>
+                <div className=" hidden lg:block  min-w-[400px] p-4 bg-secondary/20 h-full">
+                    <div className="mb-12">{"Staff picks"}</div>
+                    <div>
+                        <h4>
+                            {
+                                "Eating With My Hands Doesn’t Make Me Less Civilised"
+                            }
+                        </h4>
+                    </div>
+                    <div></div>
+                    <div></div>
                 </div>
             </div>
         </main>
