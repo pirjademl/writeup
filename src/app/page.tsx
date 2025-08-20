@@ -74,11 +74,11 @@ export default function LandingPage() {
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border/50">
+                            <Card className="flex flex-col  p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border">
                                 <CardHeader className="p-0 mb-4">
-                                    <span className="text-4xl mb-3">📝</span>
-                                    <CardTitle className="text-2xl font-semibold">
+                                    <CardTitle className="text-xl font-semibold flex items-center gap-4">
                                         Intuitive Editor
+                                        <span className="text-xl ">📝</span>
                                     </CardTitle>
                                     <CardDescription>
                                         Craft content effortlessly with a clean,
@@ -95,12 +95,11 @@ export default function LandingPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Feature 2 */}
-                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border/50">
-                                <CardHeader className="p-0 mb-4">
-                                    <span className="text-4xl mb-3">🎨</span>
-                                    <CardTitle className="text-2xl font-semibold">
+                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border">
+                                <CardHeader className="p-2 mb-4">
+                                    <CardTitle className="text-2xl font-semibold flex items-center gap-4">
                                         Customizable Frontend
+                                        <span className="text-xl ">🎨</span>
                                     </CardTitle>
                                     <CardDescription>
                                         Design your blog&apos;s look and feel
@@ -117,19 +116,18 @@ export default function LandingPage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Feature 3 */}
-                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border/50">
+                            <Card className="flex flex-col p-4 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border">
                                 <CardHeader className="p-0 mb-4">
-                                    <span className="text-4xl mb-3">⚡</span>
-                                    <CardTitle className="text-2xl font-semibold">
+                                    <CardTitle className="text-xl font-semibold flex items-center gap-4">
                                         Blazing Fast Performance
+                                        <span className="text-xl ">⚡</span>
                                     </CardTitle>
                                     <CardDescription>
                                         Your blog will load instantly, keeping
                                         your readers engaged.
                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent className="p-0 flex-grow">
+                                <CardContent className="p-0 flex-grow  h-fit">
                                     <p className="text-muted-foreground">
                                         Built with modern web technologies,
                                         ensuring your content is delivered
@@ -137,9 +135,7 @@ export default function LandingPage() {
                                     </p>
                                 </CardContent>
                             </Card>
-
-                            {/* Feature 4 */}
-                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border/50">
+                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border">
                                 <CardHeader className="p-0 mb-4">
                                     <span className="text-4xl mb-3">📊</span>
                                     <CardTitle className="text-2xl font-semibold">
@@ -161,7 +157,7 @@ export default function LandingPage() {
                             </Card>
 
                             {/* Feature 5 */}
-                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border/50">
+                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border">
                                 <CardHeader className="p-0 mb-4">
                                     <span className="text-4xl mb-3">SEO</span>
                                     <CardTitle className="text-2xl font-semibold">
@@ -180,9 +176,7 @@ export default function LandingPage() {
                                     </p>
                                 </CardContent>
                             </Card>
-
-                            {/* Feature 6 */}
-                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border/50">
+                            <Card className="flex flex-col h-full p-6 bg-card transition-all duration-300 hover:shadow-xl hover:scale-[1.01] border border-border">
                                 <CardHeader className="p-0 mb-4">
                                     <span className="text-4xl mb-3">☁️</span>
                                     <CardTitle className="text-2xl font-semibold">
@@ -205,7 +199,6 @@ export default function LandingPage() {
                     </div>
                 </section>
 
-                {/* --- Call to Action Section --- */}
                 <section className="w-full py-20 md:py-28 lg:py-36 bg-primary text-primary-foreground text-center">
                     <div className="container mx-auto px-4">
                         <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6">
