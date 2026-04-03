@@ -3,42 +3,42 @@ import { useCallback, useEffect, useState } from "react";
 
 import { BLogEditor } from "@/editor/editor";
 import { HeadingEditor } from "@/editor/blog-heading.editor";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useDebounce } from "@/app/lib/debounce";
 import axios from "axios";
 
 export default function EditBlogPage() {
-    //const params = useSearchParams();
-    //console.log("params", params);
-    //const blogId = params.get("blogId");
-    //
     const { blogId } = useParams();
-    console.log("client blog id ", blogId);
     const [content, setContent] = useState<string>("");
-    const debounceSave = useCallback(
-        useDebounce(async (newTitle: string, newcontent: string) => {
+
+    const debounceSave = useDebounce(
+        async (newTitle: string, newContent: string) => {
             if (!blogId) return;
+            console.log("updating content and heading", newContent, newTitle);
             try {
-                await fetch(`http://localhost:3000/api/blogs/${blogId}`, {
+                await fetch(`http://localhost:3000/api/blog/${blogId}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         title: newTitle,
-                        content: newcontent,
+                        content: newContent,
                     }),
                 });
-            } catch (err) {}
-        }, 5000),
-        [blogId],
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        5000,
     );
 
     const [title, setTitle] = useState<string>("");
     const handleContentChange = useCallback(
         (newContent: string) => {
             setContent(newContent);
+
             debounceSave(title, newContent);
         },
         [title, debounceSave],
@@ -53,10 +53,12 @@ export default function EditBlogPage() {
     );
 
     const handlePublish = async () => {
-        const result = await fetch("", {
-            body: JSON.stringify({ title }),
-            method: "PATCH",
+        const result = await fetch(`/api/blog/${blogId}`, {
+            method: "PUT",
         });
+        if (result.status === 200) {
+            alert("blog published successfully");
+        }
     };
 
     useEffect(() => {
@@ -73,13 +75,16 @@ export default function EditBlogPage() {
             }
         };
         fetchData();
-    }, [blogId, title, content]);
+    }, [blogId]);
 
     return (
         <div className="min-h-[calc(100vh-6rem)] py-8 px-4 flex flex-col items-center ">
             <div className="sticky   w-full justify-end flex">
                 {" "}
-                <Button className="flex w- min-w-content border align-end">
+                <Button
+                    onClick={handlePublish}
+                    className="flex w- min-w-content border align-end"
+                >
                     Publish Blog
                 </Button>
             </div>

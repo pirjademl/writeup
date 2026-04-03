@@ -4,13 +4,17 @@ import { SignupFormSchema, FormState } from '@/lib/definations';
 import { pool } from '@/persistence/mysql';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-export async function SignUp(state: FormState, formData: FormData) {
+export async function SignUp(
+    state: FormState,
+    formData: FormData,
+): Promise<FormState> {
     console.log('request coming for signup');
     const validatedFields = SignupFormSchema.safeParse({
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         email: formData.get('email'),
         password: formData.get('password'),
+        userName: formData.get('userName'),
     });
     if (!validatedFields.success) {
         return {
@@ -20,22 +24,22 @@ export async function SignUp(state: FormState, formData: FormData) {
 
     const user = validatedFields.data;
 
-    const existinguser = await pool.query(
-        'SELECT * FROM users WHERE email =?',
-        [user.email],
-    );
     const userId = uuidv4();
     let success = false;
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
     try {
+        const username = user.lastName
+            .substring(0, user.lastName.length - 1)
+            .concat(user.firstName.substring(0, user.firstName.length / 2));
         const [result] = await pool.execute(
-            'INSERT INTO users values(?,?,?,?,?,?)',
+            'INSERT INTO users values(?,?,?,?,?,?,?)',
             [
                 userId,
                 user.firstName,
                 user.lastName,
                 user.email,
+                username,
                 hashedPassword,
                 'custom',
             ],

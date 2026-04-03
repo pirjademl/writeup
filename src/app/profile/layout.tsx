@@ -3,19 +3,17 @@ import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { AuthOption } from "../lib/auth";
-import {
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-    DropdownMenuItem,
-    DropdownMenu,
-    DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { UserIcon } from "lucide-react";
-
-export default async function ProfileLayout({ children }) {
+import { ReactNode } from "react";
+import { redirect } from "next/navigation";
+type ProfileProps = {
+    children: ReactNode;
+};
+export default async function ProfileLayout({ children }: ProfileProps) {
     const session = await getServerSession(AuthOption);
+    if (!session) {
+        redirect("/login");
+    }
+
     const userMail = session.user?.email;
 
     return (
@@ -52,8 +50,17 @@ export default async function ProfileLayout({ children }) {
                     </div>
                     {children}
                 </div>
-                <div className=" hidden lg:block border border-red-500 min-w-[400px]">
-                    <div className="min-h-[100vh]">{session.user.name}</div>
+                <div className=" hidden lg:block  min-w-[400px] p-4 bg-secondary/20 h-full">
+                    <div className="mb-12">{"Staff picks"}</div>
+                    <div>
+                        <h4>
+                            {
+                                "Eating With My Hands Doesn’t Make Me Less Civilised"
+                            }
+                        </h4>
+                    </div>
+                    <div></div>
+                    <div></div>
                 </div>
             </div>
         </main>

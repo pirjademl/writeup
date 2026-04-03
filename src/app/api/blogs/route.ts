@@ -8,7 +8,20 @@ export async function POST(req: NextRequest) {
     const { title, content, status } = await req.json();
     console.log(title, content, status);
 
-    const session = await getServerSession(AuthOption);
+    const session = (await getServerSession(AuthOption)) as {
+        user: {
+            id: string;
+            name?: string;
+            email?: string;
+        };
+    };
+    if (!session || !session.user || !session.user.id) {
+        return NextResponse.json(
+            { message: "can't create blog post" },
+            { status: 401 },
+        );
+    }
+
     const authorId = session.user.id;
     try {
         const blogId = uuidv4();
@@ -16,7 +29,7 @@ export async function POST(req: NextRequest) {
             'INSERT INTO blogs(blogId,userId,title,content) values(?,?,?,?)',
             [blogId, authorId, title, content],
         );
-        console.log('blog id', blogId);
+        console.log('blog id', result);
         return NextResponse.json({ blogId: blogId });
     } catch (err) {
         console.log(err);
@@ -24,27 +37,24 @@ export async function POST(req: NextRequest) {
     }
 }
 
-// Update blog post by ID
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { blogId: string } },
-) {
+    { params }: { params: Promise<{ blogId: string }> },
+): Promise<Response> {
+    console.log('updating title and content');
     const { title, content } = await req.json();
-    const blogId = params.blogId;
+    const { blogId } = await params;
 
-    // Optional: validate title/content
     if (!title && !content) {
         return NextResponse.json(
             { message: 'Nothing to update' },
             { status: 400 },
         );
     }
-
     const session = await getServerSession(AuthOption);
     if (!session || !session.user) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-
     const authorId = session.user.id;
 
     try {
@@ -52,7 +62,7 @@ export async function PATCH(
             `UPDATE blogs SET title = ?, content = ? WHERE blogId = ? AND userId = ?`,
             [title, content, blogId, authorId],
         );
-
+        console.log('result', result);
         return NextResponse.json(
             { message: 'Blog updated successfully' },
             { status: 200 },
@@ -60,15 +70,15 @@ export async function PATCH(
     } catch (err) {
         console.error('Update error:', err);
         return NextResponse.json(
-            { message: 'Failed to update blog' },
+            { message: 'Failed to updatblog' },
             { status: 500 },
         );
     }
 }
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const [result] = await pool.query(
-            `SELECT * FROM blogs WHERE title IS NOT NULL and title <> '' AND content IS NOT NULL AND content <> '' `,
+            `SELECT * FROM blogs WHERE title IS NOT NULL and status="published" AND title <> '' AND content IS NOT NULL AND content <> '' `,
         );
 
         return NextResponse.json(result, { status: 200 });

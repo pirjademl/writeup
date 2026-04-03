@@ -8,8 +8,8 @@ export const AuthSessionProvider = ({
     children,
     session,
 }: {
-    chilren: ReactNode;
-    session: Session;
+    children: ReactNode;
+    session: Session | null;
 }) => {
     return <SessionProvider session={session}>{children}</SessionProvider>;
 };

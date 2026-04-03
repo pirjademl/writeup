@@ -12,17 +12,20 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    dropd,
 } from "@/components/ui/dropdown-menu"; // For more options
+import { ReactNode } from "react";
 
-export default function CreateBlogLayout({ children }) {
-    // Dummy user data for demonstration
+interface BlogLayoutProps {
+    children: ReactNode;
+}
+export default function CreateBlogLayout({ children }: BlogLayoutProps) {
     const user = {
         name: "Magdum Pirjade",
-        avatar: "https://github.com/shadcn.png", // Replace with actual user avatar URL
+        avatar: "https://github.com/shadcn.png",
     };
-    const blogStatus = "saved"; // Can be 'saving...', 'saved', 'error'
-return ( <div className="w-full flex flex-col min-h-screen bg-background">
+    const blogStatus = "saved";
+    return (
+        <div className="w-full flex flex-col min-h-screen bg-background">
             {/* Header for Create Blog Page */}
             <header className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border py-3 px-4 sticky top-0 z-50">
                 <div className="container mx-auto flex items-center justify-between h-14">

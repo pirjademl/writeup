@@ -22,13 +22,26 @@
 //  </div>
 //);
 //};
+//
+//
+"use client";
 
 import { CharacterCount, Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import React from "react";
+import { useEffect } from "react";
 
-export const HeadingEditor = () => {
+interface IHeadingEditor {
+    intialHeaading: string;
+    onHeadingContentChange: (arg0: string) => void;
+}
+
+export const HeadingEditor = ({
+    intialHeaading,
+    onHeadingContentChange,
+}: IHeadingEditor) => {
+    console.log("titleintial content", intialHeaading);
     const editor = useEditor({
         immediatelyRender: false,
         extensions: [
@@ -47,7 +60,18 @@ export const HeadingEditor = () => {
                 class: "p-4 text-3xl font-semibold",
             },
         },
+        onUpdate({ editor }) {
+            const content = editor.getHTML();
+            onHeadingContentChange(content);
+        },
+        content: intialHeaading || "",
     });
+    useEffect(() => {
+        if (!editor?.isEmpty) return;
+        if (editor && intialHeaading) {
+            editor.commands.setContent(intialHeaading);
+        }
+    }, [editor, intialHeaading]);
 
     return (
         <div>
